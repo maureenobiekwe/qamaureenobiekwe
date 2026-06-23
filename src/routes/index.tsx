@@ -644,82 +644,163 @@ function Recommendation() {
 const ICON = (name: string) =>
   `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}.svg`;
 
-type ToolCard = {
-  title: string;
-  hero: { kind: "icon"; src: string; alt: string } | { kind: "text"; label: string };
-  subs: ({ kind: "icon"; src: string; alt: string } | { kind: "text"; label: string })[];
-};
+type ToolItem =
+  | { kind: "icon"; name: string; src: string }
+  | { kind: "text"; name: string };
+
+const ic = (name: string, path: string): ToolItem => ({
+  kind: "icon",
+  name,
+  src: ICON(path),
+});
+const tx = (name: string): ToolItem => ({ kind: "text", name });
+
+type ToolCard = { title: string; tools: ToolItem[] };
 
 const TOOL_CARDS: ToolCard[] = [
   {
     title: "Testing & Automation",
-    hero: { kind: "icon", src: ICON("playwright/playwright-original"), alt: "Playwright" },
-    subs: [
-      { kind: "icon", src: ICON("postman/postman-original"), alt: "Postman" },
-      { kind: "text", label: "Newman" },
-      { kind: "icon", src: ICON("k6/k6-original"), alt: "k6" },
-      { kind: "text", label: "curl" },
+    tools: [
+      ic("Playwright", "playwright/playwright-original"),
+      ic("Postman", "postman/postman-original"),
+      tx("Newman"),
+      ic("k6", "k6/k6-original"),
+      tx("curl"),
+      ic("SQL", "azuresqldatabase/azuresqldatabase-original"),
     ],
   },
   {
     title: "Browser & Performance",
-    hero: { kind: "icon", src: ICON("chrome/chrome-original"), alt: "Chrome" },
-    subs: [
-      { kind: "text", label: "Lighthouse" },
-      { kind: "text", label: "GTmetrix" },
+    tools: [
+      ic("Chrome DevTools", "chrome/chrome-original"),
+      tx("Lighthouse"),
+      tx("GTmetrix"),
     ],
   },
-  {
-    title: "Security",
-    hero: { kind: "text", label: "OWASP" },
-    subs: [],
-  },
+  { title: "Security", tools: [tx("OWASP")] },
   {
     title: "Accessibility",
-    hero: { kind: "text", label: "axe DevTools" },
-    subs: [{ kind: "text", label: "WAVE" }],
+    tools: [tx("axe DevTools"), tx("WAVE")],
   },
   {
-    title: "CI/CD",
-    hero: { kind: "icon", src: ICON("githubactions/githubactions-original"), alt: "GitHub Actions" },
-    subs: [],
+    title: "CI/CD & Version Control",
+    tools: [ic("GitHub Actions", "githubactions/githubactions-original")],
   },
   {
-    title: "Project Management",
-    hero: { kind: "icon", src: ICON("jira/jira-original"), alt: "Jira" },
-    subs: [
-      { kind: "text", label: "ClickUp" },
-      { kind: "text", label: "Linear" },
-      { kind: "text", label: "TestRail" },
+    title: "Project Management & Test Management",
+    tools: [
+      ic("Jira", "jira/jira-original"),
+      tx("ClickUp"),
+      tx("Linear"),
+      tx("TestRail"),
     ],
   },
   {
     title: "Mobile Testing",
-    hero: { kind: "text", label: "BrowserStack" },
-    subs: [
-      { kind: "text", label: "Android Studio Emulator" },
-      { kind: "text", label: "Xcode Simulator" },
+    tools: [
+      tx("BrowserStack"),
+      tx("Android Studio Emulator"),
+      tx("Xcode Simulator"),
     ],
   },
   {
     title: "Documentation & Reporting",
-    hero: { kind: "icon", src: ICON("google/google-original"), alt: "Google" },
-    subs: [
-      { kind: "icon", src: ICON("markdown/markdown-original"), alt: "Markdown" },
-      { kind: "text", label: "Jam.dev" },
+    tools: [
+      ic("Google Sheets", "google/google-original"),
+      ic("Google Docs", "google/google-original"),
+      ic("Markdown", "markdown/markdown-original"),
+      tx("Jam.dev"),
     ],
   },
 ];
 
-function TextPill({ children, big }: { children: ReactNode; big?: boolean }) {
+function ToolCardView({ card }: { card: ToolCard }) {
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const idx = activeIdx ?? 0;
+  const active = card.tools[idx];
+
   return (
-    <span
-      className={`inline-flex items-center justify-center rounded-md border border-primary/50 text-primary font-semibold ${
-        big ? "px-4 py-3 text-lg" : "px-2.5 py-1 text-xs"
-      }`}
-    >
-      {children}
-    </span>
+    <div className="group rounded-2xl border border-border bg-[#1E293B] p-6 flex flex-col text-center min-h-[280px] transition-colors hover:border-primary/70 hover:shadow-[0_0_0_1px_rgba(20,184,166,0.35),0_10px_40px_-10px_rgba(20,184,166,0.35)]">
+      {/* TOP: title + separator */}
+      <div>
+        <h3 className="text-sm font-semibold uppercase tracking-wider">
+          {card.title}
+        </h3>
+        <div className="w-10 h-px bg-primary/60 mx-auto mt-2" />
+      </div>
+
+      {/* CENTER: preview zone */}
+      <div className="flex-1 grid place-items-center py-6">
+        <div className="flex flex-col items-center gap-3">
+          {active.kind === "icon" ? (
+            <img
+              src={active.src}
+              alt={active.name}
+              loading="lazy"
+              className="size-20 md:size-24 object-contain transition-transform duration-200"
+            />
+          ) : (
+            <div className="relative grid place-items-center">
+              <div className="absolute inset-0 -m-3 rounded-full bg-primary/15 blur-md" />
+              <span className="relative inline-flex items-center justify-center rounded-full border-2 border-primary/60 text-primary font-bold px-5 py-3 text-base bg-background/60">
+                {active.name}
+              </span>
+            </div>
+          )}
+          <span className="text-xs text-foreground/70 font-medium">
+            {active.name}
+          </span>
+        </div>
+      </div>
+
+      {/* BOTTOM: all tool icons */}
+      <div className="mt-2 -mx-2 px-2 py-2 rounded-lg transition-colors group-hover:bg-primary/5">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {card.tools.map((t, i) => {
+            const isActive = i === idx;
+            const common =
+              "transition-all duration-150 cursor-pointer rounded-md outline-none";
+            return (
+              <button
+                key={t.name}
+                type="button"
+                onMouseEnter={() => setActiveIdx(i)}
+                onMouseLeave={() => setActiveIdx(null)}
+                onFocus={() => setActiveIdx(i)}
+                onBlur={() => setActiveIdx(null)}
+                onClick={() =>
+                  setActiveIdx((prev) => (prev === i ? null : i))
+                }
+                aria-label={t.name}
+                title={t.name}
+                className={`${common} ${
+                  isActive ? "scale-110" : "opacity-70 hover:opacity-100"
+                }`}
+              >
+                {t.kind === "icon" ? (
+                  <img
+                    src={t.src}
+                    alt={t.name}
+                    loading="lazy"
+                    className="size-7 object-contain"
+                  />
+                ) : (
+                  <span
+                    className={`inline-flex items-center justify-center rounded-md border px-2 py-1 text-[10px] font-semibold ${
+                      isActive
+                        ? "border-primary text-primary bg-primary/10"
+                        : "border-primary/50 text-primary/90"
+                    }`}
+                  >
+                    {t.name}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -729,42 +810,7 @@ function Tools() {
       <SectionBanner id="tools" title="Core Skills & Tools" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {TOOL_CARDS.map((c) => (
-          <div
-            key={c.title}
-            className="rounded-2xl border border-border bg-card p-6 hover-glow flex flex-col items-center text-center min-h-[220px]"
-          >
-            <h3 className="text-sm font-semibold uppercase tracking-wider">{c.title}</h3>
-            <div className="w-12 h-px bg-primary/50 mt-2 mb-6" />
-            <div className="flex-1 grid place-items-center">
-              {c.hero.kind === "icon" ? (
-                <img
-                  src={c.hero.src}
-                  alt={c.hero.alt}
-                  loading="lazy"
-                  className="size-16 md:size-20 object-contain"
-                />
-              ) : (
-                <TextPill big>{c.hero.label}</TextPill>
-              )}
-            </div>
-            {c.subs.length > 0 && (
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2 min-h-[28px]">
-                {c.subs.map((s, i) =>
-                  s.kind === "icon" ? (
-                    <img
-                      key={i}
-                      src={s.src}
-                      alt={s.alt}
-                      loading="lazy"
-                      className="size-6 object-contain"
-                    />
-                  ) : (
-                    <TextPill key={i}>{s.label}</TextPill>
-                  ),
-                )}
-              </div>
-            )}
-          </div>
+          <ToolCardView key={c.title} card={c} />
         ))}
       </div>
     </section>
