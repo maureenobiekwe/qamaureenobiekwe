@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Maureen K. Obiekwe" },
+      { name: "description", content: "Showcases QA Engineer Kosisochukwu Maureen Obiekwe's expertise through detailed project documentation and key metrics." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Maureen K. Obiekwe" },
+      { property: "og:description", content: "Showcases QA Engineer Kosisochukwu Maureen Obiekwe's expertise through detailed project documentation and key metrics." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Maureen K. Obiekwe" },
+      { name: "twitter:description", content: "Showcases QA Engineer Kosisochukwu Maureen Obiekwe's expertise through detailed project documentation and key metrics." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ccff76c-374b-45cc-b9f5-2e41468243ae/id-preview-fc4545db--2f5ef1b6-1bf3-4988-ad4b-cc613f011425.lovable.app-1782245400188.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2ccff76c-374b-45cc-b9f5-2e41468243ae/id-preview-fc4545db--2f5ef1b6-1bf3-4988-ad4b-cc613f011425.lovable.app-1782245400188.png" },
     ],
     links: [
       {
