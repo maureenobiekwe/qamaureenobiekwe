@@ -641,174 +641,260 @@ function Recommendation() {
   );
 }
 
+// ─── PASTE THIS TO REPLACE: the TOOL_CARDS const, ToolCardView function, and Tools function ───
+
+// Inline SVG blobs for brand icons
+const SVG_PLAYWRIGHT = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10 object-contain" fill="currentColor">
+    <path d="M7.99585 13.141725c-0.87725 0.248975 -1.452775 0.685475 -1.8319 1.12165 0.363125 -0.317775 0.849525 -0.609425 1.505675 -0.795425 0.6711 -0.1902 1.243625 -0.188825 1.7167 -0.09755v-0.369925c-0.40355 -0.0369 -0.866225 -0.0075 -1.390475 0.14125Zm-1.872 -3.109775 -3.25795 0.858325s0.059375 0.083875 0.1693 0.195775l2.76235 -0.727875s-0.03915 0.5044 -0.379075 0.9556c0.643 -0.486475 0.705375 -1.281825 0.705375 -1.281825Zm2.727125 7.65675C4.26615 18.923575 1.8404825 13.61025 1.1060875 10.852425c-0.3393 -1.273 -0.487415 -2.2371 -0.5268925 -2.859275 -0.0042425 -0.0646 -0.0022825 -0.11905 0.002285 -0.16895 -0.237835 0.01435 -0.3517015 0.137975 -0.328535 0.49525 0.0394775 0.621825 0.187595 1.585875 0.526895 2.859275C1.5139075 13.936125 3.9399 19.24945 8.52475 18.0146c0.99795 -0.26885 1.747675 -0.758525 2.310475 -1.383625 -0.51875 0.468525 -1.168 0.8375 -1.98425 1.057725Zm0.861575 -10.90855v0.3263h1.79835c-0.0369 -0.115525 -0.074075 -0.219625 -0.110975 -0.3263h-1.687375Z" fill="#2D4552"/>
+    <path d="M11.9129 9.46735c0.80875 0.229675 1.2365 0.7967 1.462575 1.2985l0.90175 0.2561s-0.123 -1.756175 -1.711525 -2.2074c-1.486075 -0.422225 -2.400575 0.8257 -2.5118 0.9872 0.4323 -0.308 1.063575 -0.56015 1.859 -0.3344Zm7.178175 1.3066c-1.487425 -0.424125 -2.401575 0.8264 -2.511175 0.985625 0.432625 -0.307625 1.063575 -0.559875 1.85865 -0.3331 0.80745 0.23005 1.23485 0.796375 1.461625 1.298525l0.90305 0.25705s-0.125 -1.756525 -1.71215 -2.2081Zm-0.8959 4.6305 -7.501475 -2.097125s0.0812 0.411725 0.3928 0.94485l6.3159 1.765675c0.519975 -0.30085 0.792775 -0.6134 0.792775 -0.6134ZM12.994375 19.918475C7.054675 18.326 7.77275 10.758025 8.733875 7.171825c0.395725 -1.4779 0.802575 -2.576375 1.13995 -3.312725 -0.2013 -0.041425 -0.368025 0.0646 -0.532775 0.39965 -0.358225 0.726575 -0.8163 1.90955 -1.259625 3.5656 -0.96085 3.586125 -1.67895 11.15385 4.2605 12.746325 2.79955 0.75 4.980475 -0.3899 6.60625 -2.18005 -1.543175 1.3977 -3.513425 2.181325 -5.9538 1.52785Z" fill="#2D4552"/>
+    <path d="M9.7126 15.915175V14.388l-4.243175 1.2032s0.313525 -1.82175 2.526475 -2.4495c0.6711 -0.1902 1.2437 -0.1889 1.7167 -0.09755V6.780125h2.124575c-0.231325 -0.714825 -0.4551 -1.26515 -0.64305 -1.64755 -0.310925 -0.632925 -0.62965 -0.21335 -1.35325 0.39185 -0.50965 0.425775 -1.797675 1.33405 -3.7359 1.85635 -1.938275 0.522625 -3.50525 0.384025 -4.15906 0.2708 -0.9268825 -0.1599 -1.4116925 -0.36345 -1.3663375 0.34155 0.03947 0.621825 0.187595 1.58595 0.5268925 2.859275C1.8405325 13.609875 4.266525 18.9232 8.85135 17.68835c1.197625 -0.3227 2.04295 -0.960525 2.6289 -1.7735h-1.76765v0.000325ZM2.865625 10.89025l3.258275 -0.858325s-0.094975 1.25345 -1.31645 1.57545c-1.2218 0.321675 -1.941825 -0.717125 -1.941825 -0.717125Z"/>
+    <path d="M21.975075 6.8525c-0.84695 0.148475 -2.878875 0.33345 -5.389975 -0.339625 -2.5118 -0.672675 -4.17835 -1.849175 -4.838625 -2.402175 -0.936 -0.783975 -1.347725 -1.328825 -1.752925 -0.5047 -0.358225 0.726875 -0.816325 1.909875 -1.259725 3.565925 -0.960775 3.586125 -1.67885 11.15385 4.260525 12.7463 5.938125 1.591125 9.09945 -5.322175 10.0603 -8.908625 0.4434 -1.655725 0.637825 -2.9095 0.691325 -3.717925 0.061 -0.915775 -0.568025 -0.64995 -1.7709 -0.439175ZM10.0418 9.81945s0.936 -1.45575 2.523525 -1.00455c1.588525 0.451225 1.711525 2.207425 1.711525 2.207425l-4.23505 -1.202875ZM13.917 16.352c-2.79235 -0.817975 -3.223 -3.04465 -3.223 -3.04465l7.501125 2.0972c0 -0.00035 -1.5141 1.755175 -4.278125 0.94745Zm2.6521 -4.57605s0.9347 -1.45475 2.521925 -1.00225c1.587175 0.4519 1.71215 2.2081 1.71215 2.2081l-4.234075 -1.20585Z"/>
+  </svg>
+);
+
+const SVG_CYPRESS = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#69D3A7">
+    <path d="M11.998.0195c-.8642 0-1.6816.1101-2.1445.1934v.002C4.1731 1.2283 0 6.1368 0 12.0018c0 1.1265.1573 2.2328.4648 3.3028.0387.1453.0915.2993.1368.4473 1.607 4.865 6.2245 8.226 11.3925 8.2285.0651 0 .2518-.0003.502-.0118.8564-.0353 1.6228-.5734 1.9512-1.369l.4736-1.1544L20.4258 8.043H18.621l-2.3164 5.871-2.334-5.871h-1.9082l3.2734 8.0117c-.8115 1.9702-1.6252 3.9395-2.4355 5.9101-.0808.1945-.2655.3284-.4727.336-.144.005-.285.0098-.4316.0098-4.5848 0-8.6672-3.0695-9.9277-7.4649a10.3058 10.3058 0 0 1-.3985-2.8437c0-5.0887 3.6521-9.3404 8.6035-10.164.2214-.037.8885-.1446 1.7246-.1446 4.4166 0 8.269 2.732 9.7305 6.8476.0558.144.0977.293.1465.4395.299.9746.4531 1.9887.4531 3.0215 0 4.5696-2.9413 8.5326-7.3164 9.8613l.4863 1.5996c5.085-1.546 8.4995-6.1518 8.502-11.459 0-1.5491-.2983-2.8706-.6504-3.8926-.0432-.1212-.0873-.2422-.1309-.3633h-.002C21.4577 3.0954 17.0444.0195 11.998.0195ZM8.4336 7.8906c-1.1999 0-2.1747.3852-2.9805 1.1758-.8007.7856-1.205 1.7736-1.205 2.9356 0 1.1544.4068 2.1368 1.205 2.9199.8058.7906 1.7806 1.1738 2.9805 1.1738 1.705 0 3.1556-.955 3.7871-2.4883l.0332-.082-1.6289-.5547c-.168.4563-.7552 1.4883-2.1914 1.4883-.6745 0-1.2437-.2344-1.6934-.6992-.4572-.4699-.6875-1.0632-.6875-1.7578 0-.6998.2253-1.2809.6875-1.7735.4522-.4648 1.019-.7012 1.6934-.7012 1.438 0 2.0238 1.0815 2.1934 1.4883l1.627-.5527-.0333-.084c-.629-1.5358-2.082-2.4883-3.7871-2.4883Z"/>
+  </svg>
+);
+
+const SVG_POSTMAN = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#FF6C37">
+    <path d="M13.527.099C6.955-.744.942 3.9.099 10.473c-.843 6.572 3.8 12.584 10.373 13.428 6.573.843 12.587-3.801 13.428-10.374C24.744 6.955 20.101.943 13.527.099zm2.471 7.485a.855.855 0 0 0-.593.25l-4.453 4.453-.307-.307-.643-.643c4.389-4.376 5.18-4.418 5.996-3.753zm-4.863 4.861l4.44-4.44a.62.62 0 1 1 .847.903l-4.699 4.125-.588-.588zm.33.694l-1.1.238a.06.06 0 0 1-.067-.032.06.06 0 0 1 .01-.073l.645-.645.512.512zm-2.803-.459l1.172-1.172.879.878-1.979.426a.074.074 0 0 1-.085-.039.072.072 0 0 1 .013-.093zm-3.646 6.058a.076.076 0 0 1-.069-.083.077.077 0 0 1 .022-.046h.002l.946-.946 1.222 1.222-2.123-.147zm2.425-1.256a.228.228 0 0 0-.117.256l.203.865a.125.125 0 0 1-.211.117h-.003l-.934-.934-.294-.295 3.762-3.758 1.82-.393.874.874c-1.255 1.102-2.971 2.201-5.1 3.268zm5.279-3.428h-.002l-.839-.839 4.699-4.125a.952.952 0 0 0 .119-.127c-.148 1.345-2.029 3.245-3.977 5.091zm3.657-6.46l-.003-.002a1.822 1.822 0 0 1 2.459-2.684l-1.61 1.613a.119.119 0 0 0 0 .169l1.247 1.247a1.817 1.817 0 0 1-2.093-.343zm2.578 0a1.714 1.714 0 0 1-.271.218h-.001l-1.207-1.207 1.533-1.533c.661.72.637 1.832-.054 2.522z"/>
+  </svg>
+);
+
+const SVG_K6 = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#F46800">
+    <path d="M24 23.646H0L7.99 6.603l4.813 3.538L19.08.354Zm-8.8-3.681h.052a2.292 2.292 0 0 0 1.593-.64 2.088 2.088 0 0 0 .685-1.576 1.912 1.912 0 0 0-.66-1.511 2.008 2.008 0 0 0-1.37-.59h-.04a.716.716 0 0 0-.199.027l1.267-1.883-1.01-.705-.477.705-1.22 1.864c-.21.31-.386.582-.495.77-.112.2-.21.41-.29.625a1.942 1.942 0 0 0-.138.719 2.086 2.086 0 0 0 .676 1.558c.422.411.989.641 1.578.64Zm-5.365-2.027 1.398 1.978h1.496l-1.645-2.295 1.46-2.029-.97-.671-.427.565-1.314 1.853v-3.725l-1.31-1.068v7.37h1.31v-1.98Zm5.367.792a.963.963 0 1 1 0-1.927h.009a.941.941 0 0 1 .679.29.897.897 0 0 1 .29.668.978.978 0 0 1-.977.967Z"/>
+  </svg>
+);
+
+const SVG_GITHUB = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="currentColor">
+    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+  </svg>
+);
+
+const SVG_GITLAB = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#FC6D26">
+    <path d="m23.6004 9.5927-.0337-.0862L20.3.9814a.851.851 0 0 0-.3362-.405.8748.8748 0 0 0-.9997.0539.8748.8748 0 0 0-.29.4399l-2.2055 6.748H7.5375l-2.2057-6.748a.8573.8573 0 0 0-.29-.4412.8748.8748 0 0 0-.9997-.0537.8585.8585 0 0 0-.3362.4049L.4332 9.5015l-.0325.0862a6.0657 6.0657 0 0 0 2.0119 7.0105l.0113.0087.03.0213 4.976 3.7264 2.462 1.8633 1.4995 1.1321a1.0085 1.0085 0 0 0 1.2197 0l1.4995-1.1321 2.4619-1.8633 5.006-3.7489.0125-.01a6.0682 6.0682 0 0 0 2.0094-7.003z"/>
+  </svg>
+);
+
+const SVG_JIRA = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#0052CC">
+    <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.004-1.005zm5.241-5.232H5.234a5.215 5.215 0 0 0 5.215 5.215h2.129v2.057a5.215 5.215 0 0 0 5.215 5.215V7.295a1.005 1.005 0 0 0-1.001-1.014zm5.23-5.231H10.478A5.215 5.215 0 0 0 15.693 6.265h2.131v2.056a5.215 5.215 0 0 0 5.215 5.215V2.062a1.005 1.005 0 0 0-1.001-1.012z"/>
+  </svg>
+);
+
+const SVG_BROWSERSTACK = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#F5A623">
+    <path d="M11.923 0C5.937 0 .976 4.384.07 10.115a11.943 11.943 0 0 1 7.645-2.754 11.982 11.982 0 0 1 9.43 4.58 11.942 11.942 0 0 0 1.015-8.769 12.066 12.066 0 0 0-.626-1.772l-.003-.008A11.968 11.968 0 0 0 11.923 0Zm7.721 2.754A12.002 12.002 0 0 1 9.398 16.521a12.082 12.082 0 0 0 9.02 5.617c.24-.119.766-.51 1.224-.89A11.971 11.971 0 0 0 23.995 12a11.98 11.98 0 0 0-4.35-9.247zM9.33 7.557a12.159 12.159 0 0 0-2.647.401A11.944 11.944 0 0 0 .01 12.595l-.005.006c.021.427.065.853.131 1.275C1.037 19.61 6 24 11.991 24c1.45 0 2.887-.26 4.243-.773a12 12 0 0 1-6.905-15.67z"/>
+  </svg>
+);
+
+const SVG_REACT = (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="size-10" fill="#61DAFB">
+    <path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"/>
+  </svg>
+);
+
 const ICON = (name: string) =>
   `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}.svg`;
 
+// ─── Tool item types ───────────────────────────────────────────────────────
 type ToolItem =
+  | { kind: "svg"; name: string; svg: ReactNode }
   | { kind: "icon"; name: string; src: string }
   | { kind: "text"; name: string };
 
-const ic = (name: string, path: string): ToolItem => ({
-  kind: "icon",
-  name,
-  src: ICON(path),
-});
+const sv = (name: string, svg: ReactNode): ToolItem => ({ kind: "svg", name, svg });
+const ic = (name: string, path: string): ToolItem => ({ kind: "icon", name, src: ICON(path) });
 const tx = (name: string): ToolItem => ({ kind: "text", name });
 
+// ─── Tool card definitions ─────────────────────────────────────────────────
 type ToolCard = { title: string; tools: ToolItem[] };
 
 const TOOL_CARDS: ToolCard[] = [
   {
-    title: "Testing & Automation",
+    title: "Programming Languages",
     tools: [
-      ic("Playwright", "playwright/playwright-original"),
-      ic("Postman", "postman/postman-original"),
-      tx("Newman"),
-      ic("k6", "k6/k6-original"),
-      tx("curl"),
+      ic("JavaScript", "javascript/javascript-original"),
+      ic("TypeScript", "typescript/typescript-original"),
+      ic("Python", "python/python-original"),
       ic("SQL", "azuresqldatabase/azuresqldatabase-original"),
     ],
   },
   {
-    title: "Browser & Performance",
+    title: "UI Test Automation",
     tools: [
-      ic("Chrome DevTools", "chrome/chrome-original"),
-      tx("Lighthouse"),
-      tx("GTmetrix"),
-    ],
-  },
-  { title: "Security", tools: [tx("OWASP")] },
-  {
-    title: "Accessibility",
-    tools: [tx("axe DevTools"), tx("WAVE")],
-  },
-  {
-    title: "CI/CD & Version Control",
-    tools: [ic("GitHub Actions", "githubactions/githubactions-original")],
-  },
-  {
-    title: "Project Management & Test Management",
-    tools: [
-      ic("Jira", "jira/jira-original"),
-      tx("ClickUp"),
-      tx("Linear"),
-      tx("TestRail"),
+      sv("Playwright", SVG_PLAYWRIGHT),
+      sv("Cypress", SVG_CYPRESS),
+      ic("Selenium", "selenium/selenium-original"),
     ],
   },
   {
-    title: "Mobile Testing",
+    title: "Mobile Test Automation",
     tools: [
-      tx("BrowserStack"),
+      sv("BrowserStack", SVG_BROWSERSTACK),
       tx("Android Studio Emulator"),
       tx("Xcode Simulator"),
     ],
   },
   {
-    title: "Documentation & Reporting",
+    title: "API Testing Tools",
     tools: [
+      sv("Postman", SVG_POSTMAN),
+      tx("Newman"),
+      tx("curl"),
+    ],
+  },
+  {
+    title: "Load Testing Tools",
+    tools: [
+      sv("k6", SVG_K6),
+      tx("GTmetrix"),
+    ],
+  },
+  {
+    title: "Frameworks",
+    tools: [
+      sv("React", SVG_REACT),
+      ic("Node.js", "nodejs/nodejs-original"),
+      tx("Cucumber"),
+    ],
+  },
+  {
+    title: "DevOps & CI/CD",
+    tools: [
+      sv("GitHub", SVG_GITHUB),
+      sv("GitLab", SVG_GITLAB),
+      ic("GitHub Actions", "githubactions/githubactions-original"),
+      ic("Docker", "docker/docker-original"),
+      tx("Lighthouse"),
+    ],
+  },
+  {
+    title: "Cloud Platforms",
+    tools: [
+      ic("AWS", "amazonwebservices/amazonwebservices-plain-wordmark"),
+      ic("GCP", "googlecloud/googlecloud-original"),
+      ic("Azure", "azure/azure-original"),
+      ic("Docker", "docker/docker-original"),
+    ],
+  },
+  {
+    title: "Test Management & Docs",
+    tools: [
+      tx("TestRail"),
       ic("Google Sheets", "google/google-original"),
       ic("Google Docs", "google/google-original"),
       ic("Markdown", "markdown/markdown-original"),
+    ],
+  },
+  {
+    title: "Project & Defect Management",
+    tools: [
+      sv("Jira", SVG_JIRA),
+      tx("ClickUp"),
+      tx("Linear"),
+    ],
+  },
+  {
+    title: "Accessibility & Security",
+    tools: [
+      tx("OWASP"),
+      tx("axe DevTools"),
+      tx("WAVE"),
+    ],
+  },
+  {
+    title: "Performance & Diagnostics",
+    tools: [
+      tx("GTmetrix"),
+      tx("Lighthouse"),
       tx("Jam.dev"),
+      tx("Chrome DevTools"),
     ],
   },
 ];
 
+// ─── Single card component ─────────────────────────────────────────────────
 function ToolCardView({ card }: { card: ToolCard }) {
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
-  const idx = activeIdx ?? 0;
-  const active = card.tools[idx];
-
   return (
-    <div className="group rounded-2xl border border-border bg-[#1E293B] p-6 flex flex-col text-center min-h-[280px] transition-colors hover:border-primary/70 hover:shadow-[0_0_0_1px_rgba(20,184,166,0.35),0_10px_40px_-10px_rgba(20,184,166,0.35)]">
-      {/* TOP: title + separator */}
-      <div>
-        <h3 className="text-sm font-semibold uppercase tracking-wider">
+    <div className="rounded-2xl border border-border bg-[#1E293B] p-6 flex flex-col min-h-[200px] transition-colors hover:border-primary/70 hover:shadow-[0_0_0_1px_rgba(20,184,166,0.35),0_10px_40px_-10px_rgba(20,184,166,0.35)]">
+      {/* Title */}
+      <div className="mb-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground/90">
           {card.title}
         </h3>
-        <div className="w-10 h-px bg-primary/60 mx-auto mt-2" />
+        <div className="w-10 h-px bg-primary/60 mt-2" />
       </div>
 
-      {/* CENTER: preview zone */}
-      <div className="flex-1 grid place-items-center py-6">
-        <div className="flex flex-col items-center gap-3">
-          {active.kind === "icon" ? (
-            <img
-              src={active.src}
-              alt={active.name}
-              loading="lazy"
-              className="size-20 md:size-24 object-contain transition-transform duration-200"
-            />
-          ) : (
-            <div className="relative grid place-items-center">
-              <div className="absolute inset-0 -m-3 rounded-full bg-primary/15 blur-md" />
-              <span className="relative inline-flex items-center justify-center rounded-full border-2 border-primary/60 text-primary font-bold px-5 py-3 text-base bg-background/60">
-                {active.name}
+      {/* Icon grid */}
+      <div className="flex flex-wrap items-center gap-3 mt-1">
+        {card.tools.map((t) => {
+          if (t.kind === "svg") {
+            return (
+              <div
+                key={t.name}
+                title={t.name}
+                className="flex flex-col items-center gap-1 group/item"
+              >
+                <div className="size-10 flex items-center justify-center opacity-80 group-hover/item:opacity-100 transition-opacity">
+                  {t.svg}
+                </div>
+                <span className="text-[9px] text-muted-foreground leading-tight text-center max-w-[52px] truncate">
+                  {t.name}
+                </span>
+              </div>
+            );
+          }
+          if (t.kind === "icon") {
+            return (
+              <div
+                key={t.name}
+                title={t.name}
+                className="flex flex-col items-center gap-1 group/item"
+              >
+                <img
+                  src={t.src}
+                  alt={t.name}
+                  loading="lazy"
+                  className="size-10 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity"
+                />
+                <span className="text-[9px] text-muted-foreground leading-tight text-center max-w-[52px] truncate">
+                  {t.name}
+                </span>
+              </div>
+            );
+          }
+          // text badge
+          return (
+            <div
+              key={t.name}
+              title={t.name}
+              className="flex flex-col items-center gap-1 group/item"
+            >
+              <span className="inline-flex items-center justify-center rounded-md border border-primary/50 text-primary/90 font-semibold px-2 py-1.5 text-[10px] bg-background/60 group-hover/item:border-primary group-hover/item:text-primary transition-colors whitespace-nowrap">
+                {t.name}
               </span>
             </div>
-          )}
-          <span className="text-xs text-foreground/70 font-medium">
-            {active.name}
-          </span>
-        </div>
-      </div>
-
-      {/* BOTTOM: all tool icons */}
-      <div className="mt-2 -mx-2 px-2 py-2 rounded-lg transition-colors group-hover:bg-primary/5">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {card.tools.map((t, i) => {
-            const isActive = i === idx;
-            const common =
-              "transition-all duration-150 cursor-pointer rounded-md outline-none";
-            return (
-              <button
-                key={t.name}
-                type="button"
-                onMouseEnter={() => setActiveIdx(i)}
-                onMouseLeave={() => setActiveIdx(null)}
-                onFocus={() => setActiveIdx(i)}
-                onBlur={() => setActiveIdx(null)}
-                onClick={() =>
-                  setActiveIdx((prev) => (prev === i ? null : i))
-                }
-                aria-label={t.name}
-                title={t.name}
-                className={`${common} ${
-                  isActive ? "scale-110" : "opacity-70 hover:opacity-100"
-                }`}
-              >
-                {t.kind === "icon" ? (
-                  <img
-                    src={t.src}
-                    alt={t.name}
-                    loading="lazy"
-                    className="size-7 object-contain"
-                  />
-                ) : (
-                  <span
-                    className={`inline-flex items-center justify-center rounded-md border px-2 py-1 text-[10px] font-semibold ${
-                      isActive
-                        ? "border-primary text-primary bg-primary/10"
-                        : "border-primary/50 text-primary/90"
-                    }`}
-                  >
-                    {t.name}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
+// ─── Section ───────────────────────────────────────────────────────────────
 function Tools() {
   return (
     <section className="mx-auto max-w-7xl px-4 md:px-8">
       <SectionBanner id="tools" title="Core Skills & Tools" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {TOOL_CARDS.map((c) => (
           <ToolCardView key={c.title} card={c} />
         ))}
