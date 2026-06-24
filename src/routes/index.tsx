@@ -17,13 +17,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kosisochukwu Maureen Obiekwe — QA Engineer" },
+      { title: "Maureen K. Obiekwe — Expert QA Engineer" },
       {
         name: "description",
         content:
           "QA Engineer specializing in marketplace platforms, AI products, API automation, performance, security and accessibility testing.",
       },
-      { property: "og:title", content: "Kosisochukwu Maureen Obiekwe — QA Engineer" },
+      { property: "og:title", content: "Kosisochukwu Maureen Obiekwe — Expert QA Engineer" },
       {
         property: "og:description",
         content:
