@@ -482,6 +482,7 @@ const PROJECTS: Project[] = [
       },
     ],
   },
+];
 
 function ProjectCard({ p }: { p: Project }) {
   const [open, setOpen] = useState(false);
