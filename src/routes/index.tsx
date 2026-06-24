@@ -160,7 +160,7 @@ function Hero() {
           Kosisochukwu Maureen <span className="text-primary">Obiekwe</span>
         </h1>
         <p className="mt-4 text-lg md:text-xl text-muted-foreground font-medium">
-          QA Engineer
+          Expert QA Engineer
         </p>
         <p className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-foreground/85 leading-relaxed">
           I find the bugs that cost you users, revenue, and trust — before your customers do.
