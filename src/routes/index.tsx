@@ -30,6 +30,13 @@ export const Route = createFileRoute("/")({
           "I find the bugs that cost you users, revenue, and trust — before your customers do.",
       },
     ],
+    links: [
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><circle cx='18' cy='18' r='18' fill='%2314b8a6'/><text x='18' y='23' font-family='system-ui,sans-serif' font-size='13' font-weight='700' fill='white' text-anchor='middle'>MO</text></svg>`,
+      },
+    ],
   }),
   component: Portfolio,
 });
