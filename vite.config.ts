@@ -1,25 +1,15 @@
-import { tanstackStart } from "@tanstack/react-start/plugin";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import tsConfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vite";
+import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
-  plugins: [
-    tsConfigPaths(),
-    tailwindcss(),
-    tanstackStart({
-      server: { entry: "server" },
-    }),
-    react(),
-  ],
-  resolve: {
-    dedupe: ["react", "react-dom", "@tanstack/react-router"],
+  vite: {
+    plugins: [
+      nitro({
+        preset: "vercel",
+      }),
+    ],
   },
-  server: {
-    host: true,
-  },
-  nitro: {
-    preset: "vercel",
+  tanstackStart: {
+    server: { entry: "server" },
   },
 });
