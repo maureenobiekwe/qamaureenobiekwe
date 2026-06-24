@@ -139,7 +139,7 @@ function Nav() {
 
 function Hero() {
   const stats = [
-    "4+ Products Tested End-to-End",
+    "20+ Products Tested End-to-End",
     "450+ Test Cases Written",
     "145+ Bugs Documented",
     "3+ Years Experience",
@@ -252,10 +252,10 @@ const JOBS: Job[] = [
     summary: "End-to-end QA ownership for a P2P rental marketplace across web, iOS, and Android.",
   },
   {
-    company: "Owens and Xley Consults",
+    company: "Fate Round",
     role: "QA Engineer",
-    date: "Jun 2023 – Oct 2024",
-    summary: "QA for client-facing web products and internal tools at a Lagos-based consulting firm.",
+    date: "Jun 2023 – Present",
+    summary: "Owned end-to-end QA for a real-time multiplayer party game platform with 24 browser-based game modes, WebSocket room synchronization, and zero-auth join flow.",
   },
   {
     company: "Anvila (HNG Internship)",
@@ -440,25 +440,48 @@ const PROJECTS: Project[] = [
     ],
   },
   {
-    name: "Owens and Xley Consults",
-    badge: "Professional",
-    nda: true,
+    name: "Fate Round — Online Party Games",
+    badge: "In Progress",
     description:
-      "QA for client-facing web products and internal tools at a Lagos-based business consulting firm serving SMEs and entrepreneurs across recruitment, advisory, and business development services.",
-    types: ["Functional","Cross-Browser","Responsive","Performance","Usability"],
+      "QA Engineer testing a real-time multiplayer party game platform with 24 browser-based game modes, WebSocket-driven room synchronization, and a zero-auth join flow. Focused on real-time state consistency, concurrent player edge cases, and cross-device gameplay.",
+    types: ["Functional", "Real-Time", "Cross-Browser", "Accessibility", "Performance", "Exploratory"],
     stats: [
-      "16 Months",
-      "Recruitment Portal + Company Website",
-      "Lighthouse & GTmetrix Audits",
+      "12 Game Modes Tested",
+      "68 Test Cases",
+      "22 Bugs (1 P0)",
+      "4 Browsers Covered",
     ],
     details: [
-      { title: "Recruitment Portal", body: "Validated end-to-end: job listing submission, candidate application forms, CV uploads, email confirmations. Flagged validation gaps on email fields, phone formats, and required-field bypasses." },
-      { title: "Website QA", body: "Audited contact, lead-capture, and consultation booking forms. Surfaced missing client-side validation, weak error messaging, and forms submitting with empty required fields." },
-      { title: "Process Improvement", body: "Introduced a structured bug report template (steps to reproduce, environment, severity, priority, evidence) in ClickUp, replacing ad-hoc Slack reports." },
-      { title: "Performance", body: "Ran Lighthouse and GTmetrix audits and flagged regressions on image sizes, render-blocking resources, and Core Web Vitals after every content update." },
+      {
+        title: "Test Coverage",
+        body: "Built and executed 68 test cases across 12 game modes covering room creation, code sharing, player joining, live voting, host reveal, score tracking, game completion, and room teardown — with full traceability to feature requirements and reported defects.",
+      },
+      {
+        title: "Critical Bug Found",
+        body: "Caught a P0 race condition in the voting system where near-simultaneous vote submissions from multiple players caused the round to advance prematurely, displaying phantom 'no vote' entries on the host's reveal screen and corrupting round results for all participants.",
+      },
+      {
+        title: "Real-Time Synchronization",
+        body: "Tested sync by running 4 concurrent browser sessions in the same room, verifying that vote events, player join/leave broadcasts, host transfers on disconnect, and round state transitions propagated to all clients within 200ms with zero dropped frames. Performed WebSocket frame inspection via DevTools Network tab — monitoring real-time payloads for vote events, room state diffs, and player presence pings, and flagging uncompressed frame sizes exceeding 4KB during 8+ player rounds that degraded sync performance on slower connections.",
+      },
+      {
+        title: "Room Lifecycle Edge Cases",
+        body: "Validated: expired and invalid room codes returning clear error messages, host disconnect triggering graceful transfer to the next player, browser refresh mid-vote restoring session state, duplicate display names being appended with a suffix, and max player capacity enforced with a 'room full' message.",
+      },
+      {
+        title: "Cross-Browser & Responsive",
+        body: "Tested on Chrome, Firefox, Safari, and Edge at 375px, 768px, and 1440px. Surfaced card overflow during Monopoly board rendering on mobile, voting button tap targets below the 48px accessibility minimum, and game mode selection grid collapsing incorrectly on tablet viewports.",
+      },
+      {
+        title: "Accessibility (WCAG 2.1 AA)",
+        body: "Executed testing using axe DevTools and keyboard-only navigation, identifying 9 WCAG 2.1 AA violations including missing focus indicators on game cards, color contrast failures on the dark theme voting UI (3.2:1 vs required 4.5:1), and modal dialogs trapping keyboard focus without an escape path.",
+      },
+      {
+        title: "Performance",
+        body: "Ran Lighthouse audits on the landing page (78/100) and active gameplay views (42/100), pinpointing a 3.8s LCP regression during gameplay caused by WebSocket reconnection polling and render-blocking animation scripts loading synchronously.",
+      },
     ],
   },
-];
 
 function ProjectCard({ p }: { p: Project }) {
   const [open, setOpen] = useState(false);
