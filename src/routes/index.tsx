@@ -587,7 +587,7 @@ function Projects() {
   return (
     <section className="mx-auto max-w-7xl px-4 md:px-8">
       <SectionBanner id="projects" title="Projects" />
-      <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+      <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
         {PROJECTS.map((p) => (
           <ProjectCard key={p.name} p={p} />
         ))}
