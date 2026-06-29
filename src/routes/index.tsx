@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "I find the bugs that cost you users, revenue, and trust — before your customers do.",
+          "I find the bugs that cost you users, revenue, and trust before your customers do.",
       },
     ],
     links: [
@@ -139,10 +139,10 @@ function Nav() {
 
 function Hero() {
   const stats = [
-    "20+ Products Tested End-to-End",
+    "40+ Products Tested End-to-End",
     "450+ Test Cases Written",
     "145+ Bugs Documented",
-    "3+ Years Experience",
+    "6+ Years Experience",
   ];
   return (
     <section id="top" className="relative overflow-hidden pt-20 pb-24 md:pt-28 md:pb-32">
@@ -163,7 +163,7 @@ function Hero() {
           Expert QA Engineer
         </p>
         <p className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-foreground/85 leading-relaxed">
-          I find the bugs that cost you users, revenue, and trust — before your customers do.
+          I find the bugs that cost you users, revenue, and trust before your customers do.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-2 md:gap-3">
           {stats.map((s) => (
@@ -213,7 +213,7 @@ function About() {
       <p className="text-base md:text-lg leading-relaxed text-foreground/85">
         Detail-oriented QA Engineer with hands-on experience testing peer-to-peer marketplace
         platforms, AI-powered tools, and business advisory web products across web and mobile.
-        I work across the full testing lifecycle — from understanding FRD, TRD, PRDs to finding
+        I work across the full testing lifecycle from understanding FRD, TRD, PRDs to finding
         ambiguities before a line of code is written, to running k6 load tests against production
         APIs. Skilled in writing structured test cases with full requirements traceability,
         executing functional, regression, exploratory, API, security, accessibility, and
@@ -347,7 +347,7 @@ const PROJECTS: Project[] = [
       },
       {
         title: "Impact Story",
-        body: "Traced a single Paystack payment bug to 30+ downstream blocked test cases across fulfillment, contracts, escrow, and withdrawals — documented each with root-cause traceability rather than marking them as untested.",
+        body: "Traced a single Paystack payment bug to 30+ downstream blocked test cases across fulfillment, contracts, escrow, and withdrawals, documented each with root-cause traceability rather than marking them as untested.",
       },
     ],
   },
@@ -431,8 +431,8 @@ const PROJECTS: Project[] = [
     ],
     details: [
       { title: "Test Coverage", body: "Built and maintained a test case repository with full traceability between requirement IDs, ClickUp tickets, and test runs across sign-up, ID verification, listing creation, search/geolocation, rental booking, payment, and insurance flows." },
-      { title: "Critical Bug Found", body: "Caught a P0 defect in the rental checkout flow where booking confirmation could trigger before the payment status returned — preventing released-but-unpaid bookings from reaching production." },
-      { title: "API Testing", body: "Postman testing against listing, booking, messaging, and payment endpoints — asserting status codes, response shape, error handling, and rate limiting. Documented contract mismatches between frontend and backend." },
+      { title: "Critical Bug Found", body: "Caught a P0 defect in the rental checkout flow where booking confirmation could trigger before the payment status returned, preventing released-but-unpaid bookings from reaching production." },
+      { title: "API Testing", body: "Postman testing against listing, booking, messaging, and payment endpoints, asserting status codes, response shape, error handling, and rate limiting. Documented contract mismatches between frontend and backend." },
       { title: "Localization & Responsiveness", body: "Verified multi-language experience (English, French, Italian, Dutch, German) across core flows. Surfaced layout breaks, untranslated strings, and currency formatting issues at 375px, 768px, and 1440px viewports." },
       { title: "Security", body: "Tested ID verification and KYC flows for renters and owners. Validated edge cases on document upload (file size limits, unsupported formats, expired IDs). Flagged anti-enumeration gaps on login and forgot-password endpoints." },
       { title: "Regression Discipline", body: "Wrote regression suites tied to each milestone and re-ran after every fix. Bugs linked to parent tickets with reproduction steps, Jam.dev recordings, screenshots, severity, and priority." },
@@ -620,7 +620,7 @@ function MasterGuide() {
             A Reusable System for Self-Directed Quality Engineering on Any Product
           </p>
           <p className="mt-5 max-w-3xl text-foreground/75 leading-relaxed">
-            A comprehensive methodology framework I built covering the full QA lifecycle —
+            A comprehensive methodology framework I built covering the full QA lifecycle,
             designed so any QA engineer can pick up any product, with or without a task brief,
             and run professional quality assurance from day one. Born from real project
             experience where no one told me what to test or how to test it.
