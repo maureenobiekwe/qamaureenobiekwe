@@ -140,8 +140,8 @@ function Nav() {
 function Hero() {
   const stats = [
     "40+ Products Tested End-to-End",
-    "450+ Test Cases Written",
-    "145+ Bugs Documented",
+    "4000+ Test Cases Written",
+    "1k+ Bugs Documented",
     "6+ Years Experience",
   ];
   return (
