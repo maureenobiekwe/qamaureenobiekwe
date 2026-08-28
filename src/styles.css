@@ -199,8 +199,12 @@
 }
 
 .company-marquee-viewport {
+  display: flex;
+  align-items: center;
+  min-height: clamp(6.5rem, 16vw, 9rem);
   overflow: hidden;
   width: 100%;
+  padding: 2rem 0 0.5rem;
   mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
 }
 
@@ -222,9 +226,11 @@
   display: grid;
   flex: 0 0 auto;
   width: clamp(7rem, 15vw, 10rem);
-  height: 4rem;
+  height: clamp(5.5rem, 12vw, 7rem);
   place-items: center;
   outline: none;
+  border-radius: 0.5rem;
+  transition: box-shadow 180ms ease;
 }
 
 .company-logo-item::before {
@@ -265,6 +271,10 @@
 .company-logo-item:hover img {
   filter: grayscale(0);
   opacity: 1;
+}
+
+.company-logo-item:focus-visible {
+  box-shadow: 0 0 0 2px var(--teal);
 }
 
 .company-marquee:hover .company-marquee-track {

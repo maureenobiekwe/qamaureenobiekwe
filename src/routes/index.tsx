@@ -839,6 +839,7 @@ const TOOL_CARDS: ToolCard[] = [
     title: "Mobile Test Automation",
     tools: [
       sv("BrowserStack", SVG_BROWSERSTACK),
+      tx("Appium"),
       tx("Android Studio Emulator"),
       tx("Xcode Simulator"),
     ],
@@ -849,6 +850,14 @@ const TOOL_CARDS: ToolCard[] = [
       sv("Postman", SVG_POSTMAN),
       tx("Newman"),
       tx("curl"),
+    ],
+  },
+  {
+    title: "Network & Security Testing",
+    tools: [
+      tx("Charles Proxy"),
+      tx("Burp Suite"),
+      tx("OWASP ZAP"),
     ],
   },
   {
