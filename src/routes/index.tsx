@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import {
   Linkedin,
   Github,
@@ -44,6 +45,8 @@ export const Route = createFileRoute("/")({
 const LINKEDIN = "https://www.linkedin.com/in/maureen-obiekwe/";
 const GITHUB = "https://github.com/maureenobiekwe";
 const EMAIL = "obiekwekosi32@gmail.com";
+const GMAIL_COMPOSE = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL}`;
+const WHATSAPP_URL = "https://wa.link/os5xrt";
 const RESUME =
   "https://docs.google.com/document/d/1ip9KjN6VKWRu6nRSZxCHHgvbZvQ5IvlfAfPO_apVgjk/edit?usp=sharing";
 
@@ -64,6 +67,7 @@ function SectionBanner({ title, id }: { title: string; id?: string }) {
 
 function Nav() {
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("about");
   const links = [
     { href: "#about", label: "About" },
     { href: "#experience", label: "Experience" },
@@ -71,6 +75,24 @@ function Nav() {
     { href: "#tools", label: "Tools" },
     { href: "#contact", label: "Contact" },
   ];
+
+  useEffect(() => {
+    const sections = links
+      .map((link) => document.querySelector(link.href))
+      .filter((section): section is Element => section !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveSection(visible.target.id);
+      },
+      { rootMargin: "-25% 0px -65%", threshold: [0.1, 0.25, 0.5] },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
       <nav className="mx-auto max-w-7xl px-4 md:px-8 h-16 flex items-center justify-between">
@@ -119,7 +141,7 @@ function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="text-sm py-1"
+                className={`text-sm py-1 ${activeSection === l.href.slice(1) ? "text-primary font-semibold" : ""}`}
               >
                 {l.label}
               </a>
@@ -232,6 +254,53 @@ function About() {
             {t}
           </span>
         ))}
+      </div>
+    </section>
+  );
+}
+
+const COMPANY_LOGOS = [
+  { name: "AfroTape", src: "/logos/afrotape.svg" },
+  { name: "Anvila", src: "/logos/anvila.svg" },
+  { name: "Forj", src: "/logos/forj.svg" },
+  { name: "NervaGuard", src: "/logos/nervaguard.svg" },
+  { name: "AFRINIC", src: "/logos/afrinic.svg" },
+  { name: "Reconxi", src: "/logos/reconxi.svg" },
+  { name: "Groupfundd", src: "/logos/groupfundd.svg" },
+  { name: "GroupStage", src: "/logos/groupstage.svg" },
+  { name: "Fate Round", src: "/logos/fateround-logo-horizontal.svg" },
+];
+
+function CompanyLogoRow({ duplicate = false }: { duplicate?: boolean }) {
+  return (
+    <div className="company-logo-row" aria-hidden={duplicate}>
+      {COMPANY_LOGOS.map((logo) => (
+        <div
+          key={`${duplicate ? "duplicate-" : ""}${logo.name}`}
+          className="company-logo-item"
+          data-tooltip={duplicate ? undefined : logo.name}
+          tabIndex={duplicate ? -1 : 0}
+        >
+          <img src={logo.src} alt={duplicate ? "" : logo.name} loading="lazy" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CompaniesWorkedWith() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 md:px-8 py-4 md:py-8" aria-labelledby="companies-heading">
+      <div className="company-marquee rounded-2xl border border-slate-200 bg-white py-7 md:py-9">
+        <h2 id="companies-heading" className="px-6 text-center text-sm md:text-base font-semibold text-slate-700">
+          Companies I've worked with
+        </h2>
+        <div className="company-marquee-viewport mt-6" aria-label="Companies I've worked with">
+          <div className="company-marquee-track">
+            <CompanyLogoRow />
+            <CompanyLogoRow duplicate />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -949,6 +1018,29 @@ function Education() {
 }
 
 function Contact() {
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("sending");
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    // Web3Forms access key from my account.
+    formData.append("access_key", "d9083b68-f575-4168-be04-ef4f351c4deb");
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+      if (!response.ok) throw new Error("Submission failed");
+      form.reset();
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  }
+
   return (
     <section id="contact" className="mx-auto max-w-3xl px-4 md:px-8 py-20 text-center">
       <h2 className="text-3xl md:text-5xl font-bold">Let's work together</h2>
@@ -956,7 +1048,7 @@ function Contact() {
         Open to QA Engineer roles — remote or hybrid.
       </p>
       <a
-        href={`mailto:${EMAIL}`}
+        {...ext(GMAIL_COMPOSE)}
         className="mt-6 inline-flex items-center gap-2 text-lg text-primary font-medium hover:underline"
       >
         <Mail className="size-5" /> {EMAIL}
@@ -977,12 +1069,40 @@ function Contact() {
           <Github className="size-5" />
         </a>
         <a
-          href={`mailto:${EMAIL}`}
+          {...ext(GMAIL_COMPOSE)}
           aria-label="Email"
           className="size-12 grid place-items-center rounded-full border border-border hover:border-primary hover:text-primary transition-colors"
         >
           <Mail className="size-5" />
         </a>
+      </div>
+      <div className="mt-10 grid gap-6 rounded-2xl border border-border bg-card p-6 text-left md:grid-cols-[1fr_auto] md:p-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block text-sm font-medium">
+            Your Name
+            <input name="name" required className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
+          </label>
+          <label className="block text-sm font-medium">
+            Your Email Address
+            <input name="email" type="email" required className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
+          </label>
+          <label className="block text-sm font-medium">
+            Your Message
+            <textarea name="message" required rows={5} className="mt-1.5 w-full resize-y rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
+          </label>
+          <button type="submit" disabled={status === "sending"} className="inline-flex rounded-md teal-banner px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-60">
+            {status === "sending" ? "Sending..." : "Submit"}
+          </button>
+          {status === "success" && <p className="text-sm text-primary" role="status">Thanks, your message has been sent.</p>}
+          {status === "error" && <p className="text-sm text-destructive" role="alert">Something went wrong. Please try again.</p>}
+        </form>
+        <div className="flex flex-col items-center justify-center gap-3 border-t border-border pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+          <a {...ext(WHATSAPP_URL)} className="inline-flex rounded-md border border-primary/50 px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary/10">
+            Message me on WhatsApp
+          </a>
+          <QRCodeSVG value={WHATSAPP_URL} size={144} bgColor="#ffffff" fgColor="#0f172a" aria-label="Scan to message Maureen on WhatsApp." />
+          <span className="text-center text-xs text-muted-foreground">Scan to message Maureen on WhatsApp.</span>
+        </div>
       </div>
     </section>
   );
@@ -996,7 +1116,7 @@ function Footer() {
         <div className="flex gap-5">
           <a {...ext(LINKEDIN)} className="hover:text-primary transition-colors">LinkedIn</a>
           <a {...ext(GITHUB)} className="hover:text-primary transition-colors">GitHub</a>
-          <a href={`mailto:${EMAIL}`} className="hover:text-primary transition-colors">Email</a>
+          <a {...ext(GMAIL_COMPOSE)} className="hover:text-primary transition-colors">Email</a>
         </div>
       </div>
     </footer>
@@ -1031,6 +1151,7 @@ function Portfolio() {
       <main>
         <Hero />
         <About />
+        <CompaniesWorkedWith />
         <Experience />
         <Projects />
         <MasterGuide />
