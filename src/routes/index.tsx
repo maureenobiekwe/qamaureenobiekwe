@@ -292,7 +292,7 @@ function CompaniesWorkedWith() {
   return (
     <section className="mx-auto max-w-7xl px-4 md:px-8 py-4 md:py-8" aria-labelledby="companies-heading">
       <div className="company-marquee rounded-2xl border border-slate-200 bg-white py-7 md:py-9">
-        <h2 id="companies-heading" className="px-6 text-center text-sm md:text-base font-semibold text-slate-700">
+        <h2 id="companies-heading" className="px-6 text-center text-base md:text-lg font-bold text-slate-900">
           Companies I've worked with
         </h2>
         <div className="company-marquee-viewport mt-6" aria-label="Companies I've worked with">

@@ -264,14 +264,14 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.72;
-  transition: filter 250ms ease, opacity 250ms ease;
+  filter: grayscale(0);
+  opacity: 0.92;
+  transition: opacity 250ms ease, transform 250ms ease;
 }
 
 .company-logo-item:hover img {
-  filter: grayscale(0);
   opacity: 1;
+  transform: scale(1.05);
 }
 
 .company-logo-item[data-tooltip="NervaGuard"] {
