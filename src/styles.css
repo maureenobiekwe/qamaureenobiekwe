@@ -201,10 +201,10 @@
 .company-marquee-viewport {
   display: flex;
   align-items: center;
-  min-height: clamp(6.5rem, 16vw, 9rem);
+  min-height: clamp(9rem, 20vw, 12rem);
   overflow: hidden;
   width: 100%;
-  padding: 2rem 0 0.5rem;
+  padding: 2.5rem 0 1.25rem;
   mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
 }
 
@@ -226,7 +226,8 @@
   display: grid;
   flex: 0 0 auto;
   width: clamp(7rem, 15vw, 10rem);
-  height: clamp(5.5rem, 12vw, 7rem);
+  height: clamp(6.5rem, 15vw, 9rem);
+  padding: 0.75rem;
   place-items: center;
   outline: none;
   border-radius: 0.5rem;
@@ -271,6 +272,10 @@
 .company-logo-item:hover img {
   filter: grayscale(0);
   opacity: 1;
+}
+
+.company-logo-item[data-tooltip="NervaGuard"] {
+  background: #0f172a;
 }
 
 .company-logo-item:focus-visible {

@@ -266,7 +266,7 @@ const COMPANY_LOGOS = [
   { name: "NervaGuard", src: "/logos/nervaguard.svg" },
   { name: "AFRINIC", src: "/logos/afrinic.svg" },
   { name: "Reconxi", src: "/logos/reconxi.svg" },
-  { name: "Groupfundd", src: "/logos/groupfundd.svg" },
+  { name: "GroupFund", src: "/logos/groupfund.svg" },
   { name: "GroupStage", src: "/logos/groupstage.svg" },
   { name: "Fate Round", src: "/logos/fateround-logo-horizontal.svg" },
 ];
