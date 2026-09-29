@@ -529,55 +529,56 @@ function CompaniesWorkedWith() {
 
   return (
     <section className="company-carousel-section mx-auto max-w-7xl px-4 md:px-8 py-4 md:py-8" aria-labelledby="companies-heading">
-      <h2 id="companies-heading" className="mb-6 text-center text-base md:text-lg font-bold text-foreground">
-        Companies I've worked with
-      </h2>
-      <div className="company-carousel-controls">
-        <button
-          type="button"
-          className="company-carousel-arrow"
-          aria-label="Previous company logo"
-          onClick={() => moveByLogo(-1)}
-        >
-          ‹
-        </button>
-        <div
-          ref={viewportRef}
-          className="company-carousel-viewport"
-          role="region"
-          aria-label="Companies I've worked with"
-          aria-roledescription="carousel"
-          tabIndex={0}
-          onKeyDown={handleCarouselKeyDown}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-        >
-          <div ref={trackRef} className="company-marquee-track">
-            {[false, true].flatMap((duplicate) => COMPANY_LOGOS.map((logo) => (
-              <div
-                key={`${duplicate ? "duplicate-" : ""}${logo.name}`}
-                className="company-logo-card"
-                data-company={logo.name}
-                aria-hidden={duplicate}
-              >
-                <img src={logo.src} alt={duplicate ? "" : logo.name} loading="lazy" draggable={false} />
-                {logo.showLabel && <span className="company-logo-label">{logo.name}</span>}
-              </div>
-            )))}
+      <div className="company-carousel-panel">
+        <h2 id="companies-heading" className="mb-6 text-center text-base md:text-lg font-bold text-slate-900">
+          Companies I've worked with
+        </h2>
+        <div className="company-carousel-controls">
+          <button
+            type="button"
+            className="company-carousel-arrow"
+            aria-label="Previous company logo"
+            onClick={() => moveByLogo(-1)}
+          >
+            ‹
+          </button>
+          <div
+            ref={viewportRef}
+            className="company-carousel-viewport"
+            role="region"
+            aria-label="Companies I've worked with"
+            aria-roledescription="carousel"
+            tabIndex={0}
+            onKeyDown={handleCarouselKeyDown}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          >
+            <div ref={trackRef} className="company-marquee-track">
+              {[false, true].flatMap((duplicate) => COMPANY_LOGOS.map((logo) => (
+                <div
+                  key={`${duplicate ? "duplicate-" : ""}${logo.name}`}
+                  className="company-logo-card"
+                  data-company={logo.name}
+                  aria-hidden={duplicate}
+                >
+                  <img src={logo.src} alt={duplicate ? "" : logo.name} loading="lazy" draggable={false} />
+                  {logo.showLabel && <span className="company-logo-label">{logo.name}</span>}
+                </div>
+              )))}
+            </div>
           </div>
+          <button
+            type="button"
+            className="company-carousel-arrow"
+            aria-label="Next company logo"
+            onClick={() => moveByLogo(1)}
+          >
+            ›
+          </button>
         </div>
-        <button
-          type="button"
-          className="company-carousel-arrow"
-          aria-label="Next company logo"
-          onClick={() => moveByLogo(1)}
-        >
-          ›
-        </button>
-      </div>
-      <div className="company-carousel-pagination" role="group" aria-label="Choose company logo position">
+        <div className="company-carousel-pagination" role="group" aria-label="Choose company logo position">
           {COMPANY_LOGOS.map((logo, logoIndex) => (
             <button
               key={logo.name}
@@ -588,6 +589,7 @@ function CompaniesWorkedWith() {
               onClick={() => goToLogo(logoIndex)}
             />
           ))}
+        </div>
       </div>
     </section>
   );

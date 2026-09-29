@@ -306,6 +306,15 @@
   overflow: hidden;
 }
 
+.company-carousel-panel {
+  width: 100%;
+  padding: 1.5rem clamp(1rem, 3vw, 2.5rem) 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 16px 40px rgb(2 6 23 / 18%);
+}
+
 .company-carousel-controls {
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
@@ -341,9 +350,28 @@
 .company-logo-card img {
   display: block;
   width: 100%;
-  height: clamp(40px, 4vw, 54px);
+  height: clamp(56px, 5vw, 68px);
   object-fit: contain;
   pointer-events: none;
+}
+
+.company-logo-card[data-company="Anvila"] img,
+.company-logo-card[data-company="Forj"] img,
+.company-logo-card[data-company="AFRINIC"] img {
+  height: clamp(56px, 5vw, 68px);
+  object-fit: cover;
+}
+
+.company-logo-card[data-company="AfroTape"] img {
+  width: clamp(56px, 5vw, 68px);
+  height: clamp(56px, 5vw, 68px);
+  object-fit: contain;
+}
+
+.company-logo-card[data-company="NervaGuard"] img {
+  height: clamp(56px, 5vw, 68px);
+  filter: contrast(1.18);
+  object-fit: cover;
 }
 
 .company-logo-card[data-company="NervaGuard"] img {
@@ -353,7 +381,7 @@
 
 .company-logo-label {
   max-width: 100%;
-  color: var(--foreground);
+  color: #334155;
   font-size: 0.7rem;
   font-weight: 600;
   line-height: 1rem;
@@ -366,10 +394,10 @@
   width: 2.5rem;
   height: 2.5rem;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 28%);
+  border: 1px solid #cbd5e1;
   border-radius: 9999px;
-  background: rgb(255 255 255 / 8%);
-  color: #f8fafc;
+  background: #f1f5f9;
+  color: #0f172a;
   font-size: 2rem;
   line-height: 1;
   cursor: pointer;
@@ -377,12 +405,12 @@
 }
 
 .company-carousel-arrow:hover {
-  background: rgb(255 255 255 / 18%);
+  background: #e2e8f0;
 }
 
 .company-carousel-arrow:focus-visible,
 .company-carousel-dot:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid #0f766e;
   outline-offset: 3px;
 }
 
