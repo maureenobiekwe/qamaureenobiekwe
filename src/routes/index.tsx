@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import {
   Linkedin,
@@ -224,6 +224,67 @@ function Hero() {
 }
 
 function About() {
+  const slides = [
+    "I'm a QA Engineer who catches the bugs that cost founders users, revenue, and trust  before launch, not after.",
+    "I've tested peer-to-peer marketplaces, AI-powered tools, and business platforms across web and mobile, working the full testing lifecycle: spotting gaps in requirements before a line of code is written, testing REST APIs directly to catch backend issues before they ever reach the screen, and running load tests against live APIs. I also test for security gaps like data leaks between user accounts or weak auth, the kind of issue that doesn't just cost you a bug fix, it costs you user trust and possibly a breach.",
+    "I write bug reports developers can act on without back-and-forth guessing, and I test the way real users break things, slow networks, edge cases, high traffic  not just the happy path. I also built a reusable QA framework so any team I join can run a consistent quality process from day one. If a preventable bug or security gap costing you your first users is a risk you can't afford, that's exactly what I'm here to stop.",
+  ];
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ pointerId: number; startX: number; startScrollLeft: number } | null>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const goToSlide = (slideIndex: number) => {
+    const carousel = carouselRef.current;
+    const slide = carousel?.querySelector<HTMLElement>(`[data-about-slide="${slideIndex}"]`);
+    if (carousel && slide) {
+      const carouselLeft = carousel.getBoundingClientRect().left;
+      carousel.scrollTo({
+        left: carousel.scrollLeft + slide.getBoundingClientRect().left - carouselLeft,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleCarouselScroll = () => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const carouselLeft = carousel.getBoundingClientRect().left;
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>("[data-about-slide]"));
+    const closestSlide = slides.reduce((closest, slide, index) => {
+      const distance = Math.abs(slide.getBoundingClientRect().left - carouselLeft);
+      return distance < closest.distance ? { index, distance } : closest;
+    }, { index: 0, distance: Number.POSITIVE_INFINITY });
+    setActiveSlide(closestSlide.index);
+  };
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: event.currentTarget.scrollLeft,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (dragRef.current?.pointerId !== event.pointerId) return;
+    event.currentTarget.scrollLeft = dragRef.current.startScrollLeft - (event.clientX - dragRef.current.startX);
+  };
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (dragRef.current?.pointerId !== event.pointerId) return;
+    dragRef.current = null;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
+  const handleCarouselKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    goToSlide(Math.max(0, Math.min(slides.length - 1, activeSlide + direction)));
+  };
+
   const tools = [
     "Playwright","Postman","Newman","k6","Chrome DevTools","Lighthouse","axe DevTools",
     "WAVE","GitHub Actions","ClickUp","Jira","Linear","TestRail","BrowserStack",
@@ -232,19 +293,67 @@ function About() {
   return (
     <section id="about" className="mx-auto max-w-5xl px-4 md:px-8 py-20">
       <h2 className="text-3xl md:text-4xl font-bold mb-8">About</h2>
-      <p className="text-base md:text-lg leading-relaxed text-foreground/85">
-        Detail-oriented QA Engineer with hands-on experience testing peer-to-peer marketplace
-        platforms, AI-powered tools, and business advisory web products across web and mobile.
-        I work across the full testing lifecycle from understanding FRD, TRD, PRDs to finding
-        ambiguities before a line of code is written, to running k6 load tests against production
-        APIs. Skilled in writing structured test cases with full requirements traceability,
-        executing functional, regression, exploratory, API, security, accessibility, and
-        performance testing, and logging clear, reproducible defects. Comfortable working
-        directly with developers, PMs, and designers in Agile/Scrum environments to surface risk
-        early, validate fixes, and protect the user experience before release. I also built a
-        reusable QA methodology framework (the QA Master Guide) that any engineer can use to run
-        quality on any product without a task brief.
-      </p>
+      <div className="about-carousel">
+        <button
+          type="button"
+          className="about-carousel-arrow"
+          aria-label="Previous slide"
+          disabled={activeSlide === 0}
+          onClick={() => goToSlide(activeSlide - 1)}
+        >
+          ‹
+        </button>
+        <div
+          ref={carouselRef}
+          className="about-carousel-viewport"
+          role="region"
+          aria-label="About Maureen"
+          aria-roledescription="carousel"
+          tabIndex={0}
+          onScroll={handleCarouselScroll}
+          onKeyDown={handleCarouselKeyDown}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
+          <div className="about-carousel-track">
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                data-about-slide={index}
+                className="about-carousel-slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${index + 1} of ${slides.length}`}
+              >
+                <p className="text-base md:text-lg leading-relaxed text-foreground/85">{slide}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          className="about-carousel-arrow"
+          aria-label="Next slide"
+          disabled={activeSlide === slides.length - 1}
+          onClick={() => goToSlide(activeSlide + 1)}
+        >
+          ›
+        </button>
+      </div>
+      <div className="about-carousel-pagination" role="group" aria-label="Choose About slide">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            className={`about-carousel-dot${activeSlide === index ? " is-active" : ""}`}
+            aria-label={`Go to slide ${index + 1}`}
+            aria-current={activeSlide === index ? "true" : undefined}
+            onClick={() => goToSlide(index)}
+          />
+        ))}
+      </div>
       <div className="mt-8 flex flex-wrap gap-2">
         {tools.map((t) => (
           <span
@@ -260,46 +369,91 @@ function About() {
 }
 
 const COMPANY_LOGOS = [
-  { name: "AfroTape", src: "/logos/afrotape.svg" },
-  { name: "Anvila", src: "/logos/anvila.svg" },
-  { name: "Forj", src: "/logos/forj.svg" },
-  { name: "NervaGuard", src: "/logos/nervaguard.svg" },
-  { name: "AFRINIC", src: "/logos/afrinic.svg" },
-  { name: "Reconxi", src: "/logos/reconxi.svg" },
-  { name: "GroupFund", src: "/logos/groupfund.svg" },
-  { name: "GroupStage", src: "/logos/groupstage.svg" },
-  { name: "Fate Round", src: "/logos/fateround-logo-horizontal.svg" },
+  { name: "AfroTape", src: "/logos/afrotape.svg", showLabel: false },
+  { name: "Anvila", src: "/logos/anvila.svg", showLabel: false },
+  { name: "Forj", src: "/logos/forj.svg", showLabel: false },
+  { name: "NervaGuard", src: "/logos/nervaguard.svg", showLabel: false },
+  { name: "AFRINIC", src: "/logos/afrinic.svg", showLabel: false },
+  { name: "Reconxi", src: "/logos/reconxi.svg", showLabel: true },
+  { name: "GroupFund", src: "/logos/groupfund.svg", showLabel: true },
+  { name: "GroupStage", src: "/logos/groupstage.svg", showLabel: true },
+  { name: "Fate Round", src: "/logos/fateround-logo-horizontal.svg", showLabel: false },
+  { name: "Resolve", src: "/logos/resolve.png", showLabel: false },
+  { name: "FoundrHive", src: "/logos/FoundrHive.png", showLabel: false },
 ];
 
-function CompanyLogoRow({ duplicate = false }: { duplicate?: boolean }) {
-  return (
-    <div className="company-logo-row" aria-hidden={duplicate}>
-      {COMPANY_LOGOS.map((logo) => (
-        <div
-          key={`${duplicate ? "duplicate-" : ""}${logo.name}`}
-          className="company-logo-item"
-          data-tooltip={duplicate ? undefined : logo.name}
-          tabIndex={duplicate ? -1 : 0}
-        >
-          <img src={logo.src} alt={duplicate ? "" : logo.name} loading="lazy" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function CompaniesWorkedWith() {
+  const pageSize = 2;
+  const pages = Array.from({ length: Math.ceil(COMPANY_LOGOS.length / pageSize) }, (_, index) =>
+    COMPANY_LOGOS.slice(index * pageSize, (index + 1) * pageSize),
+  );
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [activePage, setActivePage] = useState(0);
+
+  const goToPage = (pageIndex: number) => {
+    carouselRef.current?.scrollTo({
+      left: carouselRef.current.clientWidth * pageIndex,
+      behavior: "smooth",
+    });
+  };
+
+  const handleCarouselScroll = () => {
+    const carousel = carouselRef.current;
+    if (carousel) setActivePage(Math.round(carousel.scrollLeft / carousel.clientWidth));
+  };
+
+  const handleCarouselKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    goToPage(Math.max(0, Math.min(pages.length - 1, activePage + direction)));
+  };
+
   return (
     <section className="mx-auto max-w-7xl px-4 md:px-8 py-4 md:py-8" aria-labelledby="companies-heading">
-      <div className="company-marquee rounded-2xl border border-slate-200 bg-white py-7 md:py-9">
+      <div className="company-carousel rounded-2xl border border-slate-200 bg-white py-7 md:py-9">
         <h2 id="companies-heading" className="px-6 text-center text-base md:text-lg font-bold text-slate-900">
           Companies I've worked with
         </h2>
-        <div className="company-marquee-viewport mt-6" aria-label="Companies I've worked with">
-          <div className="company-marquee-track">
-            <CompanyLogoRow />
-            <CompanyLogoRow duplicate />
-          </div>
+        <div
+          ref={carouselRef}
+          className="company-carousel-viewport mt-6"
+          aria-label="Companies I've worked with"
+          tabIndex={0}
+          onScroll={handleCarouselScroll}
+          onKeyDown={handleCarouselKeyDown}
+        >
+          {pages.map((page, pageIndex) => (
+            <div
+              key={pageIndex}
+              id={`company-page-${pageIndex}`}
+              className="company-carousel-page"
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${pageIndex + 1} of ${pages.length}`}
+            >
+              {page.map((logo) => (
+                <div key={logo.name} className="company-logo-card">
+                  <div className="company-logo-item" data-company={logo.name}>
+                    <img src={logo.src} alt={logo.name} loading="lazy" />
+                  </div>
+                  {logo.showLabel && <span className="company-logo-label">{logo.name}</span>}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="company-carousel-pagination" role="group" aria-label="Choose company logo page">
+          {pages.map((_, pageIndex) => (
+            <button
+              key={pageIndex}
+              type="button"
+              className={`company-carousel-dot${activePage === pageIndex ? " is-active" : ""}`}
+              aria-label={`Go to page ${pageIndex + 1}`}
+              aria-current={activePage === pageIndex ? "true" : undefined}
+              onClick={() => goToPage(pageIndex)}
+            />
+          ))}
         </div>
       </div>
     </section>
