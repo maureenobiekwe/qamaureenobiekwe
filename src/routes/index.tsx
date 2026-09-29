@@ -383,78 +383,211 @@ const COMPANY_LOGOS = [
 ];
 
 function CompaniesWorkedWith() {
-  const pageSize = 2;
-  const pages = Array.from({ length: Math.ceil(COMPANY_LOGOS.length / pageSize) }, (_, index) =>
-    COMPANY_LOGOS.slice(index * pageSize, (index + 1) * pageSize),
-  );
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [activePage, setActivePage] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef(0);
+  const sequenceWidthRef = useRef(0);
+  const stepWidthRef = useRef(0);
+  const pauseUntilRef = useRef(0);
+  const activeLogoRef = useRef(0);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startPosition: number;
+    dragging: boolean;
+  } | null>(null);
+  const [activeLogo, setActiveLogo] = useState(0);
 
-  const goToPage = (pageIndex: number) => {
-    carouselRef.current?.scrollTo({
-      left: carouselRef.current.clientWidth * pageIndex,
-      behavior: "smooth",
-    });
+  const setMarqueePosition = (position: number) => {
+    const sequenceWidth = sequenceWidthRef.current;
+    if (sequenceWidth <= 0) return;
+    const normalizedPosition = ((position % sequenceWidth) + sequenceWidth) % sequenceWidth;
+    positionRef.current = normalizedPosition;
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(${-normalizedPosition}px, 0, 0)`;
+    }
+    const stepWidth = stepWidthRef.current;
+    if (stepWidth > 0) {
+      const nextActiveLogo = Math.floor(normalizedPosition / stepWidth) % COMPANY_LOGOS.length;
+      if (nextActiveLogo !== activeLogoRef.current) {
+        activeLogoRef.current = nextActiveLogo;
+        setActiveLogo(nextActiveLogo);
+      }
+    }
   };
 
-  const handleCarouselScroll = () => {
-    const carousel = carouselRef.current;
-    if (carousel) setActivePage(Math.round(carousel.scrollLeft / carousel.clientWidth));
+  const pauseMarquee = () => {
+    pauseUntilRef.current = performance.now() + 3000;
+  };
+
+  const moveByLogo = (direction: number) => {
+    pauseMarquee();
+    const currentIndex = activeLogoRef.current;
+    setMarqueePosition((currentIndex + direction) * stepWidthRef.current);
+  };
+
+  const goToLogo = (logoIndex: number) => {
+    pauseMarquee();
+    setMarqueePosition(logoIndex * stepWidthRef.current);
+  };
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track) return;
+
+    const measureTrack = () => {
+      const firstDuplicate = track.children.item(COMPANY_LOGOS.length) as HTMLElement | null;
+      const firstLogo = track.children.item(0) as HTMLElement | null;
+      const secondLogo = track.children.item(1) as HTMLElement | null;
+      if (!firstDuplicate || !firstLogo || !secondLogo) return;
+      const previousWidth = sequenceWidthRef.current;
+      const nextWidth = firstDuplicate.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      const nextStep = secondLogo.getBoundingClientRect().left - firstLogo.getBoundingClientRect().left;
+      if (nextWidth <= 0 || nextStep <= 0) return;
+      sequenceWidthRef.current = nextWidth;
+      stepWidthRef.current = nextStep;
+      if (previousWidth > 0) {
+        setMarqueePosition((positionRef.current / previousWidth) * nextWidth);
+      } else {
+        setMarqueePosition(positionRef.current);
+      }
+    };
+
+    measureTrack();
+    const resizeObserver = new ResizeObserver(measureTrack);
+    resizeObserver.observe(viewport);
+    resizeObserver.observe(track);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    let frameId = 0;
+    let previousTime = 0;
+    const pixelsPerSecond = 20;
+
+    const animate = (time: number) => {
+      const elapsed = previousTime === 0 ? 0 : Math.min(time - previousTime, 50);
+      previousTime = time;
+      if (time >= pauseUntilRef.current && sequenceWidthRef.current > 0) {
+        setMarqueePosition(positionRef.current + (pixelsPerSecond * elapsed) / 1000);
+      }
+      frameId = requestAnimationFrame(animate);
+    };
+
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startPosition: positionRef.current,
+      dragging: false,
+    };
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+    if (!drag.dragging) {
+      if (Math.abs(deltaY) > 6 && Math.abs(deltaY) > Math.abs(deltaX)) {
+        dragRef.current = null;
+        return;
+      }
+      if (Math.abs(deltaX) <= 6 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+      drag.dragging = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    pauseMarquee();
+    setMarqueePosition(drag.startPosition - deltaX);
+  };
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (drag.dragging) {
+      pauseMarquee();
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    }
+    dragRef.current = null;
   };
 
   const handleCarouselKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
-    const direction = event.key === "ArrowRight" ? 1 : -1;
-    goToPage(Math.max(0, Math.min(pages.length - 1, activePage + direction)));
+    moveByLogo(event.key === "ArrowRight" ? 1 : -1);
   };
 
   return (
-    <section className="mx-auto max-w-7xl px-4 md:px-8 py-4 md:py-8" aria-labelledby="companies-heading">
-      <div className="company-carousel rounded-2xl border border-slate-200 bg-white py-7 md:py-9">
-        <h2 id="companies-heading" className="px-6 text-center text-base md:text-lg font-bold text-slate-900">
-          Companies I've worked with
-        </h2>
-        <div
-          ref={carouselRef}
-          className="company-carousel-viewport mt-6"
-          aria-label="Companies I've worked with"
-          tabIndex={0}
-          onScroll={handleCarouselScroll}
-          onKeyDown={handleCarouselKeyDown}
+    <section className="company-carousel-section mx-auto max-w-7xl px-4 md:px-8 py-4 md:py-8" aria-labelledby="companies-heading">
+      <h2 id="companies-heading" className="mb-6 text-center text-base md:text-lg font-bold text-foreground">
+        Companies I've worked with
+      </h2>
+      <div className="company-carousel-controls">
+        <button
+          type="button"
+          className="company-carousel-arrow"
+          aria-label="Previous company logo"
+          onClick={() => moveByLogo(-1)}
         >
-          {pages.map((page, pageIndex) => (
-            <div
-              key={pageIndex}
-              id={`company-page-${pageIndex}`}
-              className="company-carousel-page"
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${pageIndex + 1} of ${pages.length}`}
-            >
-              {page.map((logo) => (
-                <div key={logo.name} className="company-logo-card">
-                  <div className="company-logo-item" data-company={logo.name}>
-                    <img src={logo.src} alt={logo.name} loading="lazy" />
-                  </div>
-                  {logo.showLabel && <span className="company-logo-label">{logo.name}</span>}
-                </div>
-              ))}
-            </div>
-          ))}
+          ‹
+        </button>
+        <div
+          ref={viewportRef}
+          className="company-carousel-viewport"
+          role="region"
+          aria-label="Companies I've worked with"
+          aria-roledescription="carousel"
+          tabIndex={0}
+          onKeyDown={handleCarouselKeyDown}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
+          <div ref={trackRef} className="company-marquee-track">
+            {[false, true].flatMap((duplicate) => COMPANY_LOGOS.map((logo) => (
+              <div
+                key={`${duplicate ? "duplicate-" : ""}${logo.name}`}
+                className="company-logo-card"
+                data-company={logo.name}
+                aria-hidden={duplicate}
+              >
+                <img src={logo.src} alt={duplicate ? "" : logo.name} loading="lazy" draggable={false} />
+                {logo.showLabel && <span className="company-logo-label">{logo.name}</span>}
+              </div>
+            )))}
+          </div>
         </div>
-        <div className="company-carousel-pagination" role="group" aria-label="Choose company logo page">
-          {pages.map((_, pageIndex) => (
+        <button
+          type="button"
+          className="company-carousel-arrow"
+          aria-label="Next company logo"
+          onClick={() => moveByLogo(1)}
+        >
+          ›
+        </button>
+      </div>
+      <div className="company-carousel-pagination" role="group" aria-label="Choose company logo position">
+          {COMPANY_LOGOS.map((logo, logoIndex) => (
             <button
-              key={pageIndex}
+              key={logo.name}
               type="button"
-              className={`company-carousel-dot${activePage === pageIndex ? " is-active" : ""}`}
-              aria-label={`Go to page ${pageIndex + 1}`}
-              aria-current={activePage === pageIndex ? "true" : undefined}
-              onClick={() => goToPage(pageIndex)}
+              className={`company-carousel-dot${activeLogo === logoIndex ? " is-active" : ""}`}
+              aria-label={`Show ${logo.name}`}
+              aria-current={activeLogo === logoIndex ? "true" : undefined}
+              onClick={() => goToLogo(logoIndex)}
             />
           ))}
-        </div>
       </div>
     </section>
   );

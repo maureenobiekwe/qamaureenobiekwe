@@ -245,7 +245,7 @@
   scrollbar-width: none;
   overscroll-behavior-x: contain;
   cursor: grab;
-  touch-action: pan-x;
+  touch-action: pan-y;
   -webkit-mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 3.5rem), transparent 100%);
   mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 3.5rem), transparent 100%);
 }
@@ -302,81 +302,88 @@
   background: #f8fafc;
 }
 
-.company-carousel-viewport {
-  display: flex;
-  align-items: stretch;
-  min-height: clamp(11rem, 24vw, 14rem);
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
-  padding: 1.25rem 0;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
+.company-carousel-section {
+  overflow: hidden;
 }
 
-.company-carousel-viewport::-webkit-scrollbar {
-  display: none;
-}
-
-.company-carousel-page {
+.company-carousel-controls {
   display: grid;
-  flex: 0 0 100%;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
   align-items: center;
-  justify-items: center;
-  gap: 1rem;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  gap: 0.5rem;
+}
+
+.company-carousel-viewport {
+  min-width: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.company-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  width: max-content;
+  will-change: transform;
 }
 
 .company-logo-card {
   display: flex;
+  flex: 0 0 clamp(100px, 10vw, 140px);
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  min-width: 0;
+  justify-content: center;
+  gap: 0.375rem;
 }
 
-.company-logo-item {
-  display: grid;
-  width: clamp(7rem, 15vw, 10rem);
-  height: clamp(6.5rem, 15vw, 9rem);
-  padding: 0.75rem;
-  place-items: center;
-  border-radius: 0.5rem;
-  transition: box-shadow 180ms ease;
-}
-
-.company-logo-label {
-  color: #334155;
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.25rem;
-  text-align: center;
-}
-
-.company-logo-item img {
+.company-logo-card img {
   display: block;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: clamp(40px, 4vw, 54px);
   object-fit: contain;
-  opacity: 0.92;
-  transition: opacity 250ms ease, transform 250ms ease;
+  pointer-events: none;
 }
 
-.company-logo-item:hover img {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-.company-logo-item[data-company="NervaGuard"] {
+.company-logo-card[data-company="NervaGuard"] img {
+  border-radius: 0.25rem;
   background: #0f172a;
 }
 
-.company-carousel-viewport:focus-visible {
-  box-shadow: 0 0 0 2px var(--teal);
-  outline: none;
+.company-logo-label {
+  max-width: 100%;
+  color: var(--foreground);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.company-carousel-arrow {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 8%);
+  color: #f8fafc;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 180ms ease;
+}
+
+.company-carousel-arrow:hover {
+  background: rgb(255 255 255 / 18%);
+}
+
+.company-carousel-arrow:focus-visible,
+.company-carousel-dot:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
 }
 
 .company-carousel-pagination {
@@ -384,7 +391,7 @@
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 1.25rem;
 }
 
 .company-carousel-dot {
@@ -404,7 +411,8 @@
   background: #15803d;
 }
 
-.company-carousel-dot:focus-visible {
-  outline: 2px solid var(--teal);
-  outline-offset: 3px;
+@media (max-width: 640px) {
+  .company-logo-card {
+    flex-basis: clamp(100px, 28vw, 140px);
+  }
 }
