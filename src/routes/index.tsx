@@ -1336,7 +1336,7 @@ function ToolCardView({ card }: { card: ToolCard }) {
       </div>
 
       {/* Icon grid */}
-      <div className="flex flex-wrap items-center gap-3 mt-1">
+      <div className="flex flex-wrap items-start gap-3 mt-1">
         {card.tools.map((t) => {
           if (t.kind === "svg") {
             return (
@@ -1352,7 +1352,7 @@ function ToolCardView({ card }: { card: ToolCard }) {
                 >
                   {t.svg}
                 </div>
-                <span className="text-[9px] text-muted-foreground leading-tight text-center max-w-[52px] truncate">
+                <span className="text-[9px] text-muted-foreground leading-tight text-center max-w-[64px]">
                   {t.name}
                 </span>
               </div>
@@ -1371,7 +1371,7 @@ function ToolCardView({ card }: { card: ToolCard }) {
                   loading="lazy"
                   className="size-10 object-contain opacity-80 group-hover/item:opacity-100 transition-opacity"
                 />
-                <span className="text-[9px] text-muted-foreground leading-tight text-center max-w-[52px] truncate">
+                <span className="text-[9px] text-muted-foreground leading-tight text-center max-w-[64px]">
                   {t.name}
                 </span>
               </div>
