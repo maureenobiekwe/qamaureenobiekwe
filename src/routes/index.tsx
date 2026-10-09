@@ -626,7 +626,7 @@ const JOBS: Job[] = [
 function Experience() {
   return (
     <section className="mx-auto max-w-5xl px-4 md:px-8">
-      <SectionBanner id="experience" title="Work Experience" />
+      <SectionBanner id="experience" title="Selected Experience" />
       <div className="relative pl-8 md:pl-12">
         <div className="absolute left-2 md:left-4 top-0 bottom-0 w-px bg-gradient-to-b from-primary/60 via-border to-transparent" />
         {JOBS.map((j) => (
@@ -640,6 +640,9 @@ function Experience() {
             <p className="mt-2 text-foreground/75">{j.summary}</p>
           </div>
         ))}
+        <p className="-mt-4 text-sm text-muted-foreground">
+          Showing 4 recent roles, plus 40+ more products tested since 2019.
+        </p>
       </div>
     </section>
   );
@@ -944,7 +947,10 @@ function ProjectCard({ p }: { p: Project }) {
 function Projects() {
   return (
     <section className="mx-auto max-w-7xl px-4 md:px-8">
-      <SectionBanner id="projects" title="Projects" />
+      <SectionBanner id="projects" title="Products I've Helped Ship" />
+      <p className="-mt-10 mb-10 text-center text-sm text-muted-foreground">
+        A few products where testing changed the outcome before launch.
+      </p>
       <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
         {PROJECTS.map((p) => (
           <ProjectCard key={p.name} p={p} />
