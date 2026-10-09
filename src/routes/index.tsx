@@ -956,8 +956,25 @@ function Projects() {
 
 function MasterGuide() {
   const phases = [
-    "Discovery","Requirements Analysis","Test Planning","Test Design",
-    "Test Execution","Bug Reporting","Signoff","Continuous Improvement",
+    "Discovery","Requirements & Ambiguity Hunting","Test Planning","Test Design",
+    "Test Execution","Defect Management","Release Sign-Off","Regression Automation",
+  ];
+  const folders = [
+    {
+      title: "QA Master Guide",
+      body: "8-phase lifecycle, self-directed intake checklist, decision frameworks, and playbooks for functional, API, OWASP API security, WCAG accessibility, k6 performance and regression testing.",
+      href: "https://drive.google.com/drive/folders/1ZUDa5BUEP1L0K6NGDGB5pH3qN5L6BvIo",
+    },
+    {
+      title: "QA Fundamentals & Standards",
+      body: "Non-functional requirements (ISO/IEC 25010), an 8-category edge-case framework, defensible findings, test data management, Gherkin conventions, and the standards behind it all (ISO/IEC/IEEE 29119, IEEE 829).",
+      href: "https://drive.google.com/drive/folders/19GX5xVkJXL8WpDbnPdthIHPJv4JJlL2P",
+    },
+    {
+      title: "QA Agent Kit",
+      body: "An AGENTS.md rules file (never fabricate a result), 11 reusable skills from spec review to release readiness, Playwright via MCP, and a starter auth regression suite running on GitHub Actions.",
+      href: "https://drive.google.com/drive/folders/1Fi5TigQIAMs9zvL51YUsk05u0KzNnCB4",
+    },
   ];
   return (
     <section className="mx-auto max-w-6xl px-4 md:px-8 py-20">
@@ -973,15 +990,19 @@ function MasterGuide() {
           <span className="text-xs uppercase tracking-widest text-primary font-semibold">
             Featured Framework
           </span>
-          <h2 className="mt-2 text-3xl md:text-5xl font-bold">The QA Master Guide</h2>
+          <h2 className="mt-2 text-3xl md:text-5xl font-bold">
+            The QA Master Guide &amp; QA Agent Kit
+          </h2>
           <p className="mt-2 text-lg md:text-xl text-foreground/80">
-            A Reusable System for Self-Directed Quality Engineering on Any Product
+            One reusable quality system: written for people, wired for AI agents.
           </p>
           <p className="mt-5 max-w-3xl text-foreground/75 leading-relaxed">
-            A comprehensive methodology framework I built covering the full QA lifecycle,
-            designed so any QA engineer can pick up any product, with or without a task brief,
-            and run professional quality assurance from day one. Born from real project
-            experience where no one told me what to test or how to test it.
+            The methodology I run on every product, with or without a task brief. The Master
+            Guide covers the full QA lifecycle, from discovery and spec review to release
+            sign-off, with risk-based decision frameworks, execution playbooks and artifact
+            templates. The Agent Kit turns the same method into instructions an AI agent
+            follows, so testing can start in a real browser and keep running in CI without
+            someone re-explaining the process every time.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-3">
@@ -997,11 +1018,27 @@ function MasterGuide() {
             ))}
           </div>
 
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {folders.map((f) => (
+              <a
+                key={f.title}
+                {...ext(f.href)}
+                className="group flex flex-col rounded-lg border border-primary/40 bg-background/60 p-5 hover:border-primary transition-colors"
+              >
+                <h3 className="font-semibold">{f.title}</h3>
+                <p className="mt-2 flex-1 text-sm text-foreground/75 leading-relaxed">{f.body}</p>
+                <span className="mt-4 text-sm font-medium text-primary group-hover:underline">
+                  Open folder →
+                </span>
+              </a>
+            ))}
+          </div>
+
           <a
-            {...ext("https://docs.google.com/document/d/1isj4O4CLg7ngXq3hphbnTXYTTe0DMfJT3u4OWZCVeBk/edit?usp=drive_link")}
+            {...ext("https://drive.google.com/drive/folders/13lTpdrtG983Q0W7iRsTXXf9EYIEGoudp")}
             className="mt-8 inline-flex items-center gap-2 px-5 py-3 rounded-md teal-banner font-semibold hover:opacity-90 transition-opacity"
           >
-            Read the Full Guide <ArrowRight className="size-4" />
+            Open the Framework Folder →
           </a>
         </div>
       </div>
